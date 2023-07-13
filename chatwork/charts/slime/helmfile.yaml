@@ -1,0 +1,15 @@
+kubeVersion: 1.25.0
+helmDefaults:
+  timeout: 600
+  createNamespace: false
+
+commonLabels:
+  tier: slime-test
+
+releases:
+  - name: slime-cronjob-minimal
+    version: 1.1.0
+    chart: "../../../modules/chatwork-charts/slime"
+    installedTemplate: true
+    values:
+      - values/minimal.yaml.gotmpl

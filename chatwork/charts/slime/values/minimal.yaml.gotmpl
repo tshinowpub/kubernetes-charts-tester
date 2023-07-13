@@ -1,0 +1,30 @@
+autoscaling:
+  enabled: false
+
+deployment:
+  enabled: false
+
+podDisruptionBudget:
+  enabled: false
+
+service:
+  enabled: false
+
+serviceAccount:
+  create: false
+
+### CronJob
+cronjob:
+  enabled: true
+
+fullnameOverride: {{ .Release.Name }}
+nameOverride: {{ .Release.Name }}
+
+schedule: "*/5 * * * *"
+
+containers:
+  - name: job
+    image:
+      repository: hello-world
+      tag: nanoserver-ltsc2022
+    imagePullPolicy: IfNotPresent
