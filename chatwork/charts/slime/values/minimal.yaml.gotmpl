@@ -22,9 +22,11 @@ nameOverride: {{ .Release.Name }}
 
 schedule: "*/5 * * * *"
 
+restartPolicy: OnFailure
+
 containers:
   - name: job
     image:
       repository: hello-world
-      tag: nanoserver-ltsc2022
+      tag: latest
     imagePullPolicy: IfNotPresent
