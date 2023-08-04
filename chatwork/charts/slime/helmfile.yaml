@@ -1,4 +1,5 @@
-kubeVersion: 1.25.0
+---
+kubeVersion: 1.27.2
 helmDefaults:
   timeout: 600
   createNamespace: false
@@ -7,9 +8,20 @@ commonLabels:
   tier: slime-test
 
 releases:
-  - name: slime-cronjob-minimal
+  - name: minimal
+    namespace: chatwork
     version: 1.1.0
-    chart: "../../../modules/chatwork-charts/slime"
+    chart: "../../../modules/tshinow/chatwork-charts/slime"
+    installedTemplate: false
+    values:
+      - values/minimal/cronjob.yaml.gotmpl
+
+  - name: full
+    namespace: chatwork
+    version: 1.1.0
+    chart: "../../../modules/tshinow/chatwork-charts/slime"
     installedTemplate: true
     values:
-      - values/minimal.yaml.gotmpl
+      - values/full/configmap.yaml.gotmpl
+      - values/full/cronjob.yaml.gotmpl
+      - values/full/secret.yaml.gotmpl

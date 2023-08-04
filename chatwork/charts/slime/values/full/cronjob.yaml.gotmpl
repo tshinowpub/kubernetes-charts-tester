@@ -1,0 +1,115 @@
+autoscaling:
+  enabled: false
+
+deployment:
+  enabled: false
+
+podDisruptionBudget:
+  enabled: false
+
+service:
+  enabled: false
+
+serviceAccount:
+  create: false
+
+### CronJob
+cronjob:
+  enabled: true
+
+fullnameOverride: {{ .Release.Name }}
+nameOverride: {{ .Release.Name }}
+
+schedule: "*/5 * * * *"
+
+restartPolicy: OnFailure
+
+concurrencyPolicy: Replace
+failedJobsHistoryLimit: 5
+startingDeadlineSeconds: 30
+successfulJobsHistoryLimit: 10
+suspend: "false"
+timeZone: Asia/Tokyo
+
+podAnnotations:
+  example.com/slime-full.configs: '[{}]'
+
+labels:
+  tags.example.com/env: test
+
+jobTemplatelabels:
+  template.example.com/env: jobTemplate
+
+activeDeadlineSeconds: 200
+backoffLimit: 10
+completionMode: NonIndexed
+completions: 1
+manualSelector: false
+parallelism: 1
+ttlSecondsAfterFinished: 43200
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: topology.kubernetes.io/zone
+          operator: In
+          values:
+          - ap-northeast-1b
+automountServiceAccountToken: true
+
+containers:
+  - name: job
+    image:
+      repository: hello-world
+      tag: latest
+      pullPolicy: IfNotPresent
+    securityContext:
+      runAsNonRoot: false
+    ports:
+    - containerPort: 8080
+    command: ["/hello"]
+
+dnsConfig:
+  nameservers:
+    - 8.8.8.8
+useHostNetwork: false
+dnsPolicy: Default
+enableServiceLinks: true
+hostAliases:
+  - ip: "127.0.0.1"
+    hostnames:
+      - "hello-world.local"
+hostIPC: "false"
+hostPID: "false"
+hostUsers: true
+imagePullSecrets:
+  - name: myregistrykey
+initContainers:
+  enabled: false
+nodeName: test
+nodeSelector:
+  eks.node.com/group: "cronjob"
+preemptionPolicy: PreemptLowerPriority
+priority: 1
+priorityClassName: system-node-critical
+readinessGates:
+  - conditionType: "www.example.com/feature-1"
+schedulerName: default-scheduler
+jobSecurityContext:
+  runAsNonRoot: false
+setHostnameAsFQDN: "false"
+shareProcessNamespace: "false"
+subdomain: "hello-world"
+terminationGracePeriodSeconds: 60
+tolerations:
+- key: "key1"
+  operator: "Equal"
+  value: "value1"
+  effect: "NoSchedule"
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: DoNotSchedule
+    labelSelector:
+      app: myapp
